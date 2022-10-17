@@ -27,7 +27,7 @@ class mechanism:
         self.update_links(Rr,**kwargs)
         self.update_state()
         self.find_surface()
-        self.find_Lchar()
+        self.find_L_char()
 
     def update_links(self,Rr,**kwargs):
         # Link length parametrization
@@ -44,8 +44,8 @@ class mechanism:
         self.link_lengths = np.concatenate((self.A,self.B,self.C,self.D))
         # Rhombic pyramid parametrization
 
-    def find_Lchar(self):
-        self.Lchar = self.__dist(self.N[0],self.N[6])
+    def find_L_char(self):
+        self.L_char = self.__dist(self.N[0],self.N[6])
 
     # Updates angles for PPM
     def update_angles(self,theta=0,phi=0,debug=False):
@@ -170,7 +170,7 @@ class mechanism:
             for j,phi in enumerate(np.linspace(0,2*np.pi,m)):
                 N = self.forward_kinematics(theta,phi)
                 self.X[i][j],self.Y[i][j],self.Z[i][j] = np.round(N[6][0],7),np.round(N[6][1],7),np.round(N[6][2],7)
-        return np.std(self.X)
+        return ((100*np.std(self.X))/self.L_char,np.max(self.Y)/self.L_char)
     ####################
     # Visualization
     ####################
