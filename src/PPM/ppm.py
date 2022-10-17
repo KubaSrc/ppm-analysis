@@ -26,8 +26,8 @@ class mechanism:
         # Update geometry
         self.update_links(Rr,**kwargs)
         self.update_state()
-        self.find_surface()
         self.find_L_char()
+        self.find_surface()
 
     def update_links(self,Rr,**kwargs):
         # Link length parametrization
@@ -170,7 +170,7 @@ class mechanism:
             for j,phi in enumerate(np.linspace(0,2*np.pi,m)):
                 N = self.forward_kinematics(theta,phi)
                 self.X[i][j],self.Y[i][j],self.Z[i][j] = np.round(N[6][0],7),np.round(N[6][1],7),np.round(N[6][2],7)
-        return ((100*np.std(self.X))/self.L_char,np.max(self.Y)/self.L_char)
+        return ((100*np.std(self.X))/self.L_char,100*np.max(self.Y)/self.L_char)
     ####################
     # Visualization
     ####################
@@ -227,6 +227,7 @@ class mechanism:
         self.ax = self.fig.add_subplot(projection='3d',computed_zorder=False)
         self.ax.plot_surface(self.Z, self.Y, self.X, color=[0.3010, 0.7450, 0.9330],edgecolor=[0, 0.4470, 0.7410, 0.5],zorder=2)   
         plt.show()
+
     # Used to update frames ion animation
     def update_frame(self,sweep):
         self.theta = sweep[0]
