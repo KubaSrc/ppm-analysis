@@ -7,8 +7,9 @@ def vis_ppm(mode = "draw"):
     PPM = ppm.mechanism(A=25.15,B=38,C=76,D=58.25)
     # Draw in a given position
     if mode == "draw":
-        PPM.update_angles(theta=np.deg2rad(19),phi=0,debug=False)
+        PPM.update_angles(theta=np.deg2rad(0),phi=np.deg2rad(0),debug=False)
         PPM.draw()
+        np.savetxt("nodes.csv",PPM.N,delimiter=',')
     # Animate across range of angles
     if mode == "surf":
         PPM.plot_surface()
@@ -21,4 +22,4 @@ def vis_ppm(mode = "draw"):
     # Show surface plot of PPM
 
 if __name__ == "__main__":
-    vis_ppm("surf")
+    vis_ppm("draw")
