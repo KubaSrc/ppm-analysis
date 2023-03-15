@@ -36,11 +36,11 @@ def sim_worker(data_path,Lc,n_seeds,m_samples,sigma,X):
             np.savetxt(f, np.array([[g,h,hd,E_mean]]),delimiter=',')
 
 # Splits design space across multiple threads and simulates error
-def sim_main(s_range,d_sweep,num_workers,Lc,n_seeds,m_samples,sigma):
+def sim_main(s_range,n_sweep,num_workers,Lc,n_seeds,m_samples,sigma):
     # Define our simulation bounds
-    H = np.arange(s_range[0][0],s_range[0][1],d_sweep[0])
-    HD = np.arange(s_range[1][0],s_range[1][1],d_sweep[1])
-    G = np.arange(s_range[2][0],s_range[2][1],d_sweep[2])
+    H = np.linspace(s_range[0][0],s_range[0][1],n_sweep[0])
+    HD = np.linspace(s_range[1][0],s_range[1][1],n_sweep[1])
+    G = np.linspace(s_range[2][0],s_range[2][1],n_sweep[2])
     print("H_size: {}, HD_size: {}, G_size: {}".format(np.size(H),np.size(HD),np.size(G)))
 
     # Combine into a single vector
@@ -82,8 +82,8 @@ if __name__ == '__main__':
     print("Starting sim: "+str(datetime.datetime.now()))
     # Define design space sweep
     sweep_ranges = ((.1,.5),(.1,3.5),(10,350)) # (H, HD, G)
-    delta_sweep = (0.025,0.025,2) # For np.arange
-    n_sweep = (90,90,90) # For np.linspace
+    delta_sweep = (0.01,0.025,2) # For np.arange
+    n_sweep = (100,100,100) # For np.linspace
     num_workers = 6
     # Simulation constants
     n_seeds = 100
@@ -91,5 +91,5 @@ if __name__ == '__main__':
     Lc = 1
     sigma = Lc*(.05/100)
     # Run simulation
-    sim_main(sweep_ranges,delta_sweep,num_workers,Lc,n_seeds,m_samples,sigma)
+    sim_main(sweep_ranges,n_sweep,num_workers,Lc,n_seeds,m_samples,sigma)
     print("Run time: {:.3f}".format(time.time()-t_start))

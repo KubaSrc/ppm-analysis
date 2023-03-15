@@ -1,6 +1,6 @@
 close all; clear all; clc
 
-T = readtable('./data/error_sim_2023_01_21-15_16_58');
+T = readtable('./data/error_sim_2023_02_02-08_11_13');
 
 % Reduce volume to surface of optimal (H/D)*. Figure out what the optimal Vs = (H/Lc)
 
@@ -37,8 +37,25 @@ HD_unique(Sk_star == min(Sk_star))
 disp("min Sk*");
 disp(min(Sk_star))
 
-figure()
-plot(T.H(T.HD==0.5),T.E_mean(T.H(T.HD==0.5)))
+%% Plot a histogram over full design space
+
+fig  = figure(2); clf; hold on;
+fig.Position  = [100 100 1000 700];
+
+map = brewermap(3,'Set1');
+color_idx = 1;
+
+histogram(T.E_mean,926,'facecolor',"#A9A9A9",'EdgeColor','none')
+histogram(T.E_mean,926,'EdgeColor',"#707070",'linewidth',2,'DisplayStyle','stairs')
+histogram(T.E_mean,[0.06,0.075],'facecolor',map(color_idx,:),'EdgeColor','none')
+
+xlim([0,2])
+
+% Just more matlab formatting for plot
+set(gca,'fontsize',axis_size);
+xlabel("$S_k$",'fontSize',label_size,'interpreter','latex')
+ylabel("Count",'fontSize',label_size,'interpreter','latex')
+
 
 %% Plotting parameters
 ms = 100;
@@ -51,13 +68,13 @@ font_type = 'arial';
 alpha = 0.05;
 AZ = 50;
 EL = 25;
-fig  = figure(1); clf; hold on;
+fig  = figure(2); clf; hold on;
 fig.Position  = [100 100 1000 700];
 
 % Reshape data for surface plot
-mesh_HD = reshape(HD_unique,78,170);
-mesh_G = reshape(G_unique,78,170);
-mesh_K_star = reshape(Sk_star,78,170);
+mesh_HD = reshape(HD_unique,100,100);
+mesh_G = reshape(G_unique,100,100);
+mesh_K_star = reshape(Sk_star,100,100);
 
 % Plot surface, contour, and reach constrained space
 surf(mesh_HD,mesh_G,log(mesh_K_star)-5,log(mesh_K_star),'FaceColor','interp','EdgeColor','none')
@@ -74,12 +91,12 @@ zlabel("$log(\bar{S_k})$",'fontSize',label_size,'interpreter','latex')
 view([AZ EL])
 colormap(flipud(brewermap([],'Spectral')));
 cb = colorbar;
-clim([-2.75,2])
+clim([min(log(Sk_star)),max(log(Sk_star))])
 set(cb,'FontSize',color_bar_size)
 cb.Label.Interpreter = 'latex';
-cb.Label.String = 'arg min $log(Sk)$';
+cb.Label.String = 'min $log(Sk)$';
 view(0,90)
-xlim([0,4])
+xlim([0,3])
 
 % lg = legend('interpreter','latex');
 % lg.FontSize = 24;
